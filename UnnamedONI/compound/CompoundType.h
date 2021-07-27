@@ -1,0 +1,11 @@
+#pragma once
+
+enum class CompoundType {
+	VOID,
+	LIQUID_HYDROGEN,
+	GASEOUS_HYDROGEN,
+	LIQUID_HELIUM,
+	GASEOUS_HELIUM,
+	SOLID_LITHIUM,
+	size
+};

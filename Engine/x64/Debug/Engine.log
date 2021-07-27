@@ -1,0 +1,17 @@
+﻿  Engine.cpp
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(176,46): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(176,46): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(221,46): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(221,46): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(307,34): warning C4244: 'initializing': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(308,34): warning C4244: 'initializing': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(310,43): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(310,43): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(311,26): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(311,26): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(312,22): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(312,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(312,47): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
+C:\Users\Rico\Documents\UnnamedONI\Engine\engine\Engine.cpp(312,47): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+SDL2_image.lib(SDL2_image.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
+  Engine.vcxproj -> C:\Users\Rico\Documents\UnnamedONI\x64\Debug\Engine.lib
