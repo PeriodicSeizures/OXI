@@ -6,9 +6,10 @@
 #include "CompoundType.h"
 
 enum class StateOfMatter : uint16_t {
-	Gas,
-	Liquid,
-	Solid
+	NONE,
+	GAS,
+	LIQUID,
+	SOLID
 };
 
 class Compound {
@@ -22,6 +23,7 @@ public:
 	static const Compound LIQUID_HELIUM;
 	static const Compound GASEOUS_HELIUM;
 	static const Compound SOLID_LITHIUM;
+	static const Compound WATER;
 
 private:
 	static std::vector<Compound*> compounds;

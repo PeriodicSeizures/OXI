@@ -7,5 +7,6 @@ enum class CompoundType {
 	LIQUID_HELIUM,
 	GASEOUS_HELIUM,
 	SOLID_LITHIUM,
+	WATER,
 	size
 };

@@ -12,20 +12,20 @@
 * Will contain different layers of whatever (buildings, fluids, conduits...)
 */
 class GridNode {
-private:
+public:
 	int x;
 	int y;
+
+	CompoundType compound_type;
 	float mass;
 	float heat; // kelvin
 	//float electrons;
-	CompoundType compound_type;
 
 public:
-	GridNode();
+	GridNode(int x, int y);
 
 public:
-	void generate(int x, int y, 
-		float mass, float heat, CompoundType compound_type);
+	void set(CompoundType compound_type, float mass, float heat);
 	
 	/*
 	* calc_new_state(...): Perform heat transfer across 
@@ -37,7 +37,9 @@ public:
 	* a new state change will need to be calculated only if 
 	* any given temperatures of neighboring nodes are different
 	*/
-	void calc_new_state(GridNode* a, float delta);
+	void calcNewState(GridNode* a, float delta);
+
+	void on_render();
 };
 
 #endif

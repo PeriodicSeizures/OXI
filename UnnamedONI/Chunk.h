@@ -17,12 +17,27 @@ public:
 	Chunk(int x, int y);
 
 public:
-	GridNode &getNode(unsigned int x, unsigned int y);
+	/*
+	* getNode(..): Return the node located at (x, y)
+	* 
+	*/
+	GridNode* getNode(unsigned x, unsigned y);
+	GridNode *getNodeSafe(unsigned x, unsigned y);
+	GridNode* getNodeWrapped(int x, int y);
+	
+	/*
+	* set(...): Set node values in a region
+	*/
+	void set(CompoundType type, float mass, float heat);
+	void set(CompoundType compound_type, float mass, float heat, 
+		int x, int y, int w, int h);
 
-	void fill(CompoundType compound_type, float mass, float heat);
+	void doPatternTransfer(int wrap_count);
 
-	// update all
-	//void on_tick();
+	void on_render();
+
+private:
+	void createNodes();
 
 };
 

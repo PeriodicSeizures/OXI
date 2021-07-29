@@ -13,7 +13,7 @@ Compound::Compound(CompoundType compound_type,
 	low_state_change(0),
 	high_state_change(0),
 	density(0),
-	state_of_matter(StateOfMatter::Gas),
+	state_of_matter(StateOfMatter::NONE),
 	color({ 0, 0, 0, 0 }) {}
 
 Compound::Compound(CompoundType compound_type,
@@ -39,7 +39,7 @@ Compound::Compound(CompoundType compound_type,
 	state_of_matter(state),
 	color(color)
 {
-	compounds.insert(compounds.begin() + static_cast<unsigned>(compound_type), this);
+	compounds[static_cast<unsigned>(compound_type)] = this;
 }
 
 Compound *Compound::get(CompoundType type) {
@@ -48,10 +48,10 @@ Compound *Compound::get(CompoundType type) {
 	return compounds[static_cast<unsigned>(type)];
 }
 
-const Compound Compound::VOID(CompoundType::VOID, "Void");
-const Compound Compound::LIQUID_HYDROGEN(CompoundType::LIQUID_HYDROGEN, "Liquid Hydrogen");
-const Compound Compound::GASEOUS_HYDROGEN(CompoundType::GASEOUS_HYDROGEN, "Hydrogen Gas");
-const Compound Compound::LIQUID_HELIUM(CompoundType::LIQUID_HELIUM, "Liquid Helium");
-const Compound Compound::GASEOUS_HELIUM(CompoundType::GASEOUS_HELIUM, "Helium Gas");
-const Compound Compound::SOLID_LITHIUM(CompoundType::SOLID_LITHIUM, "Lithium");
-
+const Compound Compound::VOID(CompoundType::VOID, "Void", 0, 0, 0, 0, 0, 0, 0, StateOfMatter::NONE, {});
+const Compound Compound::LIQUID_HYDROGEN(CompoundType::LIQUID_HYDROGEN, "Liquid Hydrogen",	0, .180f, 14.3f, 0, 0, 0, 0, StateOfMatter::LIQUID, {});
+const Compound Compound::GASEOUS_HYDROGEN(CompoundType::GASEOUS_HYDROGEN, "Hydrogen Gas",	0, .168f, 14.3f, 0, 0, 0, 0, StateOfMatter::GAS, {});
+const Compound Compound::LIQUID_HELIUM(CompoundType::LIQUID_HELIUM, "Liquid Helium",		0, .170f, 5.19f, 0, 0, 0, 0, StateOfMatter::LIQUID, {});
+const Compound Compound::GASEOUS_HELIUM(CompoundType::GASEOUS_HELIUM, "Helium Gas",			0, .156f, 5.19f, 0, 0, 0, 0, StateOfMatter::GAS, {});
+const Compound Compound::SOLID_LITHIUM(CompoundType::SOLID_LITHIUM, "Lithium",				0, 85.0f, 3.60f, 0, 0, 0, 0, StateOfMatter::SOLID, {});
+const Compound Compound::WATER(CompoundType::WATER, "Water",								0, .598f, 4.19f, 0, 0, 0, 0, StateOfMatter::LIQUID, {});
