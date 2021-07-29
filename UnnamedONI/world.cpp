@@ -1,12 +1,14 @@
 #include <thread>
 #include <chrono>
+#include <iostream>
 #include "world.h"
 
 World::World() : wrap_count(0) {
 	auto chunk = createChunk(0, 0);
 	chunk->set(CompoundType::GASEOUS_HYDROGEN, 1, 200, 0, 0, 8, 16);
 
-	chunk->set(CompoundType::GASEOUS_HYDROGEN, 1, 430, 8, 0, 8, 16);
+	chunk->set(CompoundType::GASEOUS_HYDROGEN, 1, 350, 8, 0, 8, 16);
+	//chunk->getNode(0, 0)->set(CompoundType::GASEOUS_HYDROGEN, 1, 400);
 }
 
 World::~World() {
@@ -62,10 +64,12 @@ void World::on_update() {
 
 	chunk->doPatternTransfer(wrap_count--);
 
+	//std::cout << chunk->getNode(0, 0)->heat << ", " << chunk->getNode(1, 0)->heat << "\n";
+
 	if (wrap_count <= -4)
 		wrap_count = 0;
 
-	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 void World::on_render() {

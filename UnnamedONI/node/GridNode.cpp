@@ -50,19 +50,18 @@ void GridNode::calcNewState(GridNode* a, float delta) {
 
 void GridNode::on_render() {
 	// draw this tile
-	const SDL_Color *c = nullptr;
+	SDL_Color c;
 	if (heat < 273.f) // 0 C
-		c = &Engine::DARK_AQUA;
+		c = Engine::DARK_AQUA;
 	else if (heat < 291.f) // 18 C
-		c = &Engine::AQUA;
+		c = Engine::AQUA;
 	else if (heat < 304.f) // 31 C
-		c = &Engine::GREEN;
+		c = Engine::GREEN;
 	else if (heat < 312.f) // 39 C
-		c = &Engine::YELLOW;
+		c = Engine::YELLOW;
 	else //if (heat < 345.f) // 72 C
-		c = &Engine::RED;
+		c = Engine::RED;
 
-	assert(c);
 
-	Engine::fillRect(*c, x * 16, y * 16, 16, 16);
+	Engine::fillRect(c, x * 16, y * 16, 16, 16);
 }
