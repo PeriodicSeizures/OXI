@@ -6,8 +6,6 @@
 #include <thread>
 
 void run() {
-	auto t = std::unique_ptr<Texture>(new Texture{});
-
 	OGL_init();
 
 	//OGL_drawRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0b1111100000011111);

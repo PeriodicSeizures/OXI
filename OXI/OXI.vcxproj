@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{9afb512a-8051-48fe-8193-ec12ceb3f693}</ProjectGuid>
-    <RootNamespace>NspireGreatGame</RootNamespace>
+    <RootNamespace>OXI</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
