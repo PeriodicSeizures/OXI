@@ -114,7 +114,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\Rico\Documents\VisualStudio2019\Libraries\SDL2-2.0.16\include</AdditionalIncludeDirectories>
     </ClCompile>
@@ -131,7 +131,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\Rico\Documents\VisualStudio2019\Libraries\SDL2-2.0.16\include</AdditionalIncludeDirectories>
     </ClCompile>
@@ -145,17 +145,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DugDig.cpp" />
     <ClCompile Include="lodepng.cpp" />
-    <ClCompile Include="OGL.cpp" />
+    <ClCompile Include="GL.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="OMain.cpp" />
-    <ClCompile Include="OXI.cpp" />
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DugDig.h" />
     <ClInclude Include="fix.h" />
     <ClInclude Include="lodepng.h" />
-    <ClInclude Include="OGL.h" />
-    <ClInclude Include="OXI.h" />
+    <ClInclude Include="GL.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

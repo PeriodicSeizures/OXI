@@ -1,8 +1,8 @@
-#include "OGL.h"
+#include "GL.h"
 
 //#define LODEPNG_NO_COMPILE_ENCODER
 
-#include "OXI.h"
+#include "Util.h"
 
 #include "lodepng.h"
 #include <unordered_set>
@@ -10,6 +10,9 @@
 
 #ifdef _TINSPIRE
 	#include <libndls.h>
+
+	static bool grayscale;
+	static std::unique_ptr<color_t> screenInverted; // for flipped the screen on grayscale models
 #else
 	#include <SDL.h>
 	static SDL_Window* window;
@@ -18,7 +21,6 @@
 #endif
 
 static std::unique_ptr<color_t> screen;
-static std::unique_ptr<Texture> texDither;
 
 inline void pixel(int x, int y, color_t c) {
 	if (x < 0 || y < 0 || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT) {
@@ -43,22 +45,29 @@ inline void normalize(int& pos, int& size, int bound) {
 	}
 }
 
-void OGL_init() {
+void DD_glInit() {
 #ifdef _TINSPIRE
-	lcd_init(SCR_320x240_565);
+	// handle other nspires too
+
+	// BOOL is_cm: since v3.1 r863. TRUE on TI-Nspire CM/CM-C.
+	// cm seems to be a more limited variant of nspire,
+	// can be in color too
+	grayscale = lcd_type() == SCR_320x240_4;
+	if (grayscale) {
+		lcd_init(SCR_320x240_16);
+	} else
+		lcd_init(SCR_320x240_565);
 #else
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 		throw std::runtime_error("Unable to init SDL");
 
-	window = SDL_CreateWindow("OGL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 320, 240, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("DD", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 320, 240, SDL_WINDOW_SHOWN);
 
 	if (!window)
 		throw std::runtime_error("Unable to create SDL window");
 #endif
 
 	screen = std::unique_ptr<color_t>(new color_t[SCREEN_WIDTH * SCREEN_HEIGHT]);
-
-	texDither = OGL_loadTexture("dither.png");
 
 #ifndef _TINSPIRE
 	surface = SDL_GetWindowSurface(window);
@@ -67,17 +76,27 @@ void OGL_init() {
 #endif
 }
 
-void OGL_uninit() {
+void DD_glUnInit() {
 #ifdef _TINSPIRE
 	lcd_init(SCR_TYPE_INVALID);
+	screenInverted.reset();
 #else
-	SDL_Quit();
+	SDL_FreeSurface(surface565);
+	SDL_Quit(); // this should free all windows and surfaces
 #endif
+	screen.reset();
 }
 
-void OGL_render() {
+void DD_glRender() {
 #ifdef _TINSPIRE
-	lcd_blit(screen.get(), SCR_320x240_565);
+	if (grayscale) {
+		COLOR* ptr = screen + SCREEN_HEIGHT * SCREEN_WIDTH, * ptr_inv = screen_inverted + SCREEN_HEIGHT * SCREEN_WIDTH;
+		while (--ptr >= screen)
+			*--ptr_inv = ~*ptr;
+
+		lcd_blit(screenInverted.get(), SCR_320x240_16);
+	} else
+		lcd_blit(screen.get(), SCR_320x240_565);
 #else
 	//surface->pixels
 	SDL_BlitSurface(surface565, NULL, surface, NULL);
@@ -86,84 +105,11 @@ void OGL_render() {
 }
 
 
-// transparency/alpha is not supported
-std::unique_ptr<Texture> OGL_loadTexture(const char* name) {
-	std::vector<byte_t> buffer;
-
-	OXI_loadFile(name, buffer);
-
-	std::vector<unsigned char> pixels;
-	unsigned int w, h;
-	lodepng::State state;
-	if (lodepng::decode(pixels, w, h, state, buffer))
-		throw std::runtime_error("Failed to decode texture");
-
-	if (w > UCHAR_MAX || h > UCHAR_MAX)
-		throw std::runtime_error("Texture dimesions are too large");
-
-
-
-	auto tex = std::unique_ptr<Texture>(new Texture{
-		static_cast<byte_t>(w),
-		static_cast<byte_t>(h),
-		std::unique_ptr<color_t>(new color_t[static_cast<uint64_t>(w * h)]),
-		false,
-		0 });
-
-	// transparency detection
-	{
-		std::unordered_set<color_t> colors;
-		for (int i = 0; i < pixels.size() / 4; i++) {
-			
-			// if transparent
-			if (pixels[i * 4 + 3] == 0) {
-				tex->m_useTransparency = true;
-			}
-			else {
-				uint64_t rgb888 = (pixels[i * 4] << 16) | (pixels[i * 4 + 1] << 8) | (pixels[i * 4 + 2]);
-				auto rgb565 = COLOR_888_565(rgb888);
-
-				colors.insert(rgb565);
-			}
-		}
-
-		// iterate unused for transparent candidate
-		if (tex->m_useTransparency) {
-			for (color_t c = 0; c < std::numeric_limits<color_t>::max(); c++) {
-				if (colors.find(c) == colors.end()) {
-					tex->m_transparent = c;
-					break;
-				}
-			}
-		}
-	}
-
-
-
-	for (int i = 0; i < pixels.size() / 4; i++) {
-		// adds used colors for later transparent decision
-		if (pixels[i * 4 + 3] == 0) {
-			tex->m_pixels.get()[i] = tex->m_transparent;
-		}
-		else {
-			uint64_t rgb888 = (pixels[i * 4] << 16) | (pixels[i * 4 + 1] << 8) | (pixels[i * 4 + 2]);
-			auto rgb565 = COLOR_888_565(rgb888);
-
-			tex->m_pixels.get()[i] = rgb565;
-		}
-	}
-
-	return tex;
-
-	//return std::unique_ptr<Texture>(
-//		new Texture{static_cast<byte_t>(w), static_cast<byte_t>(h), std::move(px), false, 0});
-	
-}
 
 
 
 // unoptimized currently
-void OGL_drawRect(int x, int y, int w, int h, color_t c) {
+void DD_glDrawRect(int x, int y, int w, int h, color_t c) {
 	for (int j = y; j < y + h; j++) {
 		for (int i = x; i < x + w; i++) {
 			pixel(i, j, c);
@@ -171,12 +117,12 @@ void OGL_drawRect(int x, int y, int w, int h, color_t c) {
 	}
 }
 
-void OGL_drawTexture(int x, int y, Texture* texture) {
+void DD_glDrawTexture(int x, int y, Texture* texture) {
 	//OGL_drawTexture(x, y, 0, 0, texture->m_width, texture->m_height, texture);
 	throw std::runtime_error("not implemented");
 }
 
-void OGL_drawTexture(int x, int y, int tx, int ty, int tw, int th, Texture* texture) {
+void DD_glDrawTexture(int x, int y, int tx, int ty, int tw, int th, Texture* texture) {
 	//throw std::runtime_error("not implemented");
 
 	if (x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
@@ -202,7 +148,7 @@ void OGL_drawTexture(int x, int y, int tx, int ty, int tw, int th, Texture* text
 }
 
 
-void OGL_drawTexture(Rect* screen_rect, Rect* texture_rect, Texture* texture) {
+void DD_glDrawTexture(Rect* screen_rect, Rect* texture_rect, Texture* texture) {
 	// draw image with scaling
 	// impose texture_rect upon screen_rect with stretching/scaling
 	const FFix tex_x_inc = FFix(texture_rect->w) / FFix(screen_rect->w);
@@ -288,81 +234,4 @@ void OGL_drawTextureFast(Rect* scr_rect, Rect* tex_rect, Texture* tex) {
 	//	tex_x = texture_rect->x;
 	//	tex_y += tex_y_inc;
 	//}
-}
-
-
-
-
-void OGL_dither(Dither d, int chunk_x, int chunk_y) {
-	// draw it
-	Rect scr_rect{ chunk_x * 4, chunk_y * 4, 4, 4 };
-	Rect tex_rect{ ((int) d) * 4, 0, 4, 4 };
-	//OGL_drawTexture(&scr_rect, &tex_rect, texDither.get());
-	OGL_drawTexture(scr_rect.x, scr_rect.y, tex_rect.x, tex_rect.y, tex_rect.w, tex_rect.h, texDither.get());
-}
-
-void OGL_ditherRect(Dither d, int chunk_x, int chunk_y, int chunk_w, int chunk_h) {
-	for (int y = chunk_y; y < chunk_y + chunk_h; y++) {
-		for (int x = chunk_x; x < chunk_x + chunk_w; x++) {
-			OGL_dither(d, x, y);
-		}
-	}
-}
-
-void OGL_ditherGradRadial(int chunk_x, int chunk_y, int r) {
-	throw std::runtime_error("not implemented");
-	for (int y = -r; y < r; y++) {
-		for (int x = -r; x < r; x++) {
-			//int dist = x * x + y * y;
-			int dist = std::sqrt(x * x + y * y);
-			if (dist < (int)Dither::COUNT) {
-				Dither d = Dither(dist);
-				if (x * x + y * y <= r * r) {
-					//OGL_effectDither(d, x + chunk_x, y + chunk_y);
-				}
-			}
-		}
-	}
-}
-
-
-void OGL_drawTextureFast(int x, int y, int tx, int ty, int tw, int th, Texture* texture) {
-
-	throw std::runtime_error("Do not use");
-
-	if (x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
-		return;
-
-	//if (tx)
-
-	// clip image within screen
-	//int draw_x = std::max(0, std::min(SCREEN_WIDTH - 1, x));
-	//int draw_y = std::max(0, std::min(SCREEN_HEIGHT - 1, y));
-
-	const int draw_x = std::max(0, x);
-	const int draw_y = std::max(0, y);
-
-	// cap lower bounds
-	//x = std::max(0, x);
-	//y = std::max(0, y);
-
-	int draw_w = tw;
-	int draw_h = th;
-	if (x < 0)
-		draw_w = tw + x;
-	else if (x + tw >= SCREEN_WIDTH)
-		draw_w = SCREEN_WIDTH - x;
-
-	if (y < 0)
-		draw_h = th + y;
-	else if (y + th >= SCREEN_HEIGHT)
-		draw_h = SCREEN_HEIGHT - y;
-
-	for (; y < SCREEN_HEIGHT; y++) {
-		int pitch = draw_x + draw_y * draw_w;
-		//std::copy(texture->m_pixels.get() + pitch, 
-		//	texture->m_pixels.get() + pitch + draw_w, 
-		//	screen + tx + ty*(int)texture->m_width);
-	}
-
 }

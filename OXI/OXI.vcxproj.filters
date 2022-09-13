@@ -18,7 +18,7 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OGL.cpp">
+    <ClCompile Include="GL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OMain.cpp">
@@ -27,12 +27,15 @@
     <ClCompile Include="lodepng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OXI.cpp">
+    <ClCompile Include="Util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DugDig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OGL.h">
+    <ClInclude Include="GL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lodepng.h">
@@ -41,7 +44,10 @@
     <ClInclude Include="fix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OXI.h">
+    <ClInclude Include="Util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DugDig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

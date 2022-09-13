@@ -1,0 +1,32 @@
+# csv with horizontals only
+# entity,state,x,y,w,h
+
+player dig 38 5 14 14
+player dig 55 5 14 14
+
+player move 106 5 13 14
+player move 126 5 12 14
+
+tether attached 156 8 16 5
+player inflate 37 22 16 14
+player inflate 54 23 15 13
+
+# hands up
+player dead 20 39 16 14
+# spin 1
+player dead 71 21 16 16
+# spin 2
+player dead 88 21 16 16
+# spin 3
+player dead 105 23 16 14
+# pop
+player dead 124 26 11 11
+
+player squash_v 140 39 14 7
+player squash_h 157 29 14 7
+
+# https://youtu.be/zOuLiKwHciw?t=1077
+# this anim is for the tether extending
+player extend 122 40 16 13
+
+tether extend 156 42 16 5
